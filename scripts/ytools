@@ -1,0 +1,26 @@
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+
+import sys
+import optparse
+from ytools.ytools import optiondefaults, validate, dump
+
+def main(argv):
+    optparser = optparse.OptionParser(prog = argv[0], usage='Usage: %prog [OPTION] -p JSONPATH_EXPRESSION FILE...',
+        description = "Dumps data from json (or yaml) documents in yaml format. Command line wrapper for jsonpath-ng.")
+    optparser.add_option('-p', '--json-path', dest='path', default='$', help="Syntax for jsonpath expression: https://pypi.python.org/pypi/jsonpath-ng/1.4.2")
+    optparser.add_option('-f', '--output-format', metavar='OUTPUTFORMAT', dest='format', choices=['yaml', 'json', 'python'], default='yaml', help='Output format. Can be "yaml", "json" or "python". [default: %default]')
+    optparser.add_option('-y', '--yaml-options', dest='yaml_options', default=optiondefaults['yaml'], help="kwargs for yaml.dump (pyYaml) as yaml.mapping (for experts). [default: '%default']")
+    optparser.add_option('-j', '--json-options', dest='json_options', default=optiondefaults['json'], help="kwargs for json.dumps as yaml.mapping (for experts). [default: '%default']")
+    optparser.add_option('-v', '--validate', metavar='SCHEMA', dest='schema', help="Validate documents against json-schema")
+    optparser.add_option('--encoding', dest='encoding', default='utf-8', help="Set encoding of input documents (if different from utf-8)")
+    opts, args = optparser.parse_args(argv[1:])
+    valid = True
+    if opts.schema:
+        valid = validate(opts.schema, args, opts.encoding)
+    if valid:
+        del(opts.__dict__["schema"])
+        dump(args, **opts.__dict__)
+
+if __name__ == '__main__':
+    main(sys.argv)

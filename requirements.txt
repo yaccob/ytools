@@ -1,0 +1,4 @@
+yamltools
+jsonpath-ng==1.4.3
+jsonschema==2.6.0
+PyYAML==3.12
