@@ -15,12 +15,16 @@ Command-line tool for selectively dumping nodes from `yaml` (or `json`) document
   + ... as well as multiple `yaml` documents within a file
   + ... and a combination of both
 
+###### Installation
+
+`pip install ytools`
+
 ###### Description
 
-For selecting nodes `ytools` uses `jsonpath_ng.ext`.  
+For selecting nodes, `ytools` uses `jsonpath_ng.ext`.  
 The syntax is documented at https://pypi.python.org/pypi/jsonpath-ng/1.4.2.
 
-By default (if no path is provided) complete input documents are dumped in `yaml` format (path defaults to `'$'`).  
+By default (if no path is provided), complete input documents are dumped in `yaml` format (path defaults to `'$'`).  
 This can be used to get `yaml` output for `json` documents or vice versa:
 - `python ytools.py input.json`  
   ... for converting json to yaml, or ...  
@@ -28,13 +32,14 @@ This can be used to get `yaml` output for `json` documents or vice versa:
   ... for the opposite direction.
 
 
-Additionally `yaml` and `json` documents can be validated against a `json-schema` which may be provided in `yaml` or `json` format.  
+Additionally, `yaml` and `json` documents can be validated against a `json-schema` which may be provided in `yaml` or `json` format.  
 `schema.yaml` is a sample for `json-schema` in `yaml` format.
 
-`python ytools.py -h`
+`ytools -h`
 
 ```
-Usage: ytools.py [OPTION] -p JSONPATH_EXPRESSION FILE...
+$ ytools -h
+Usage: /usr/local/bin/ytools [OPTION] -p JSONPATH_EXPRESSION FILE...
 
 Dumps data from json (or yaml) documents in yaml format. Command line wrapper
 for jsonpath-ng.
@@ -179,7 +184,7 @@ documents:
 
 #### Output format `yaml` (default)
 
-With the `yaml` output format by default each match is output as a separate `yaml` document. This way we achieve that the output is valid `yaml`.:
+With the `yaml` output format by default, each match is output as a separate `yaml` document. This way we achieve that the output is valid `yaml`.:
 
 ```
 🎼  ytools -p '$..chapters[*].description' input.yaml
@@ -211,7 +216,7 @@ Some chapter description
 ```
 #### Other output formats
 
-Unfortunately when using the `json` or `python` output format the same selection can't produce valid `json` or `python` output. That's because neither json nor python support the concept of (multiple) documents:
+Unfortunately, when using the `json` or `python` output format the same selection can't produce valid `json` or `python` output. That's because neither json nor python support the concept of (multiple) documents:
 
 ```
 🎼  ytools -p '$..chapters[*].description' input.yaml -f json --json-options='{indent: 4}'
