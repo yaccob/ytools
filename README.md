@@ -10,6 +10,7 @@ Command-line tool for selectively dumping nodes from `yaml` (or `json`) document
   + If `yaml` is used as output format (default) the output is a valid `yaml` document.
 + Validate `yaml` and `json` documents.
   + The `json-schema` can be provided in `yaml` format as well, which improves readability and writability.
++ Preserve order of mapping-keys in `yaml` and `json` output.
 + Multi-document support
   + Multiple input files
   + ... as well as multiple `yaml` documents within a file
