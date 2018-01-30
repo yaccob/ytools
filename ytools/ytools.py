@@ -24,8 +24,6 @@ def validate(schemafile, args, encoding='utf-8'):
                     sys.stderr.write("%s: %s\n" % (filename, e.message))
                     sys.stderr.write("  document-path: %s\n" % (list(e.absolute_path)))
                     sys.stderr.write("  schema-path:   %s\n" % (list(e.absolute_schema_path)))
-                    return False
-    return True
 
 def dump(args, path='$', format='yaml', yaml_options=optiondefaults['yaml'], json_options=optiondefaults['json'], encoding='utf-8'):
     dict_constructor = lambda loader, node: dict(loader.construct_pairs(node))
