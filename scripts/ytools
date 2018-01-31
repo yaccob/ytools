@@ -3,6 +3,9 @@
 
 import sys
 import optparse
+import logging
+import jsonschema
+import yaml
 from ytools.ytools import optiondefaults, validate, dump
 
 def main(argv):
@@ -15,12 +18,17 @@ def main(argv):
     optparser.add_option('-v', '--validate', metavar='SCHEMA', dest='schema', help="Validate documents against json-schema")
     optparser.add_option('--encoding', dest='encoding', default='utf-8', help="Set encoding of input documents (if different from utf-8)")
     opts, args = optparser.parse_args(argv[1:])
-    valid = True
-    if opts.schema:
-        valid = validate(opts.schema, args, opts.encoding)
-    if valid:
+    try:
+        if opts.schema:
+            validate(opts.schema, args, opts.encoding)
         del(opts.__dict__["schema"])
         dump(args, **opts.__dict__)
+    except jsonschema.exceptions.ValidationError, e:
+        sys.stderr.write("%s: %s\n" % (e.filename, e.message))
+        sys.stderr.write("  document-path: %s\n" % (list(e.absolute_path)))
+        sys.stderr.write("  schema-path:   %s\n" % (list(e.absolute_schema_path)))
+    except yaml.scanner.ScannerError, e:
+        sys.stderr.write("%s\n" % e)
 
 if __name__ == '__main__':
     main(sys.argv)

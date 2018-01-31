@@ -6,10 +6,9 @@ import fileinput
 import collections
 
 import yaml, json
-import jsonpath_ng.ext
+import jsonpath_ng.ext as jsonpath
 import jsonschema
 
-jsonpath = jsonpath_ng.ext
 optiondefaults = {"yaml": "{explicit_start: True, explicit_end: True, allow_unicode: True}", "json": "{indent: 2, encoding: utf-8}", "python": "{}"}
 
 def validate(schemafile, args, encoding='utf-8'):
@@ -21,9 +20,8 @@ def validate(schemafile, args, encoding='utf-8'):
                 try:
                     jsonschema.validate(document, schema)
                 except jsonschema.exceptions.ValidationError, e:
-                    sys.stderr.write("%s: %s\n" % (filename, e.message))
-                    sys.stderr.write("  document-path: %s\n" % (list(e.absolute_path)))
-                    sys.stderr.write("  schema-path:   %s\n" % (list(e.absolute_schema_path)))
+                    e.filename = filename
+                    raise e
 
 def dump(args, path='$', format='yaml', yaml_options=optiondefaults['yaml'], json_options=optiondefaults['json'], encoding='utf-8'):
     dict_constructor = lambda loader, node: dict(loader.construct_pairs(node))
