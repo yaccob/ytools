@@ -6,10 +6,12 @@ import optparse
 import logging
 import jsonschema
 import yaml
-from ytools.ytools import optiondefaults, validate, dump
+from ytools import optiondefaults, validate, dump, __version__
 
 def main(argv):
-    optparser = optparse.OptionParser(prog = argv[0], usage='Usage: %prog [OPTION] -p JSONPATH_EXPRESSION FILE...',
+    optparser = optparse.OptionParser(prog = argv[0],
+        usage='Usage: %prog [OPTION] -p JSONPATH_EXPRESSION FILE...',
+        version='%s %s' % ("%prog", __version__),
         description = "Dumps data from json (or yaml) documents in yaml format. Command line wrapper for jsonpath-ng. Find more information at https://github.com/yaccob/ytools")
     optparser.add_option('-p', '--json-path', dest='path', default='$', help="Syntax for jsonpath expression: https://pypi.python.org/pypi/jsonpath-ng/1.4.2")
     optparser.add_option('-f', '--output-format', metavar='OUTPUTFORMAT', dest='format', choices=['yaml', 'json', 'python'], default='yaml', help='Output format. Can be "yaml", "json" or "python". [default: %default]')
