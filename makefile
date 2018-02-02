@@ -1,21 +1,41 @@
-%PHONY: all clean upload
+PACKAGE=ytools
 
-all: README.rst ytools.egg-info
+VERSION=`python -c "import $(PACKAGE); print($(PACKAGE).__version__)"`
 
-upload: ytools.egg-info
-	twine upload dist/*
+%PHONY: all clean upload tag commit
 
-clean:
-	-rm -rf *.pyc
-	-rm -rf ytools/*.pyc
-	-rm -rf dist
-	-rm -rf ytools.egg-info
-	-rm -f README.rst
-	-rm -f MANIFEST
-
-ytools.egg-info: ytools/ytools.py setup.py requirements.txt MANIFEST.in README.rst
-	rm -rf dist
-	python setup.py sdist
+all: install
 
 README.rst: README.md
 	pandoc -f markdown_github -t rst $< -o $@
+
+install: dist build
+	pip install -e .
+
+dist: $(wildcard $(PACKAGE)/*.py) README.rst setup.py requirements.txt MANIFEST.in
+	rm -rf $@
+	python setup.py sdist
+
+build: $(wildcard $(PACKAGE)/*.py) README.rst setup.py requirements.txt MANIFEST.in
+	rm -rf $@
+	python setup.py bdist_wheel
+
+commit:
+	-git commit -a -m "Committing for Version $(VERSION)"
+
+tag: commit
+	-git tag -a "v$(VERSION)" -m "Version $(VERSION)"
+	-git push origin "v$(VERSION)"
+
+upload: install tag
+	twine upload dist/*
+
+clean:
+	#@for pattern in `cat .gitignore`; do find . -name "*/$$pattern" -delete; done
+	-rm -rf *.pyc
+	-rm -rf $(PACKAGE)/*.pyc
+	-rm -rf dist
+	-rm -rf build
+	-rm -rf $(PACKAGE).egg-info
+	-rm -f README.rst
+	-rm -f MANIFEST
