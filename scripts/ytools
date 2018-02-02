@@ -3,7 +3,6 @@
 
 import sys
 import optparse
-import logging
 import jsonschema
 import yaml
 from ytools import optiondefaults, validate, dump, __version__

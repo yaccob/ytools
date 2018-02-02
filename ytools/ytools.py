@@ -24,18 +24,23 @@ def validate(schemafile, args, encoding='utf-8'):
                     raise e
 
 def dump(args, path='$', format='yaml', yaml_options=optiondefaults['yaml'], json_options=optiondefaults['json'], encoding='utf-8'):
+    def orderedDict_constructor(loader, node, deep=False):
+        data = collections.OrderedDict()
+        yield data
+        if isinstance(node, yaml.MappingNode):
+            loader.flatten_mapping(node)
+        data.update(collections.OrderedDict(loader.construct_pairs(node, deep)))
     dict_constructor = lambda loader, node: dict(loader.construct_pairs(node))
-    orderedDict_constructor = lambda loader, node: collections.OrderedDict(loader.construct_pairs(node))
-    orderedDict_representer = lambda dumper, data: dumper.represent_dict(data.iteritems())
-    dumpers = {
-        "yaml": {"dumper": yaml.dump, "kwargs": yaml_options, "yaml_constructor": orderedDict_constructor, "yaml_representer": orderedDict_representer},
-        "json": {"dumper": json.dumps, "kwargs": json_options, "yaml_constructor": orderedDict_constructor, "yaml_representer": orderedDict_representer},
-        "python": {"dumper": lambda x, **kwargs: x, "kwargs": '{}', "yaml_constructor": dict_constructor, "yaml_representer": orderedDict_representer}
+    encoders = {
+        "yaml": {"dumper": yaml.dump, "kwargs": yaml_options, "yaml_constructor": orderedDict_constructor},
+        "json": {"dumper": json.dumps, "kwargs": json_options, "yaml_constructor": orderedDict_constructor},
+        "python": {"dumper": lambda x, **kwargs: x, "kwargs": '{}', "yaml_constructor": dict_constructor}
     }
-    yaml.add_constructor(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, dumpers[format]["yaml_constructor"])
-    yaml.add_representer(collections.OrderedDict, dumpers[format]["yaml_representer"])
+    yaml.add_constructor(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, orderedDict_constructor)
+    yaml.add_constructor(u'tag:yaml.org,2002:timestamp', yaml.constructor.SafeConstructor.construct_yaml_str)
+    yaml.add_representer(collections.OrderedDict, lambda dumper, data: dumper.represent_dict(data.iteritems()))
     documents = yaml.load_all("".join(fileinput.input(args, openhook=fileinput.hook_encoded(encoding))))
-    formatoptions = dict(yaml.load(optiondefaults[format]), **yaml.load(dumpers[format]["kwargs"]))
+    formatoptions = dict(yaml.load(optiondefaults[format]), **yaml.load(encoders[format]["kwargs"]))
     for document in documents:
         for match in jsonpath.parse(path).find(document):
-            print dumpers[format]["dumper"](match.value, **formatoptions)
+            print encoders[format]["dumper"](match.value, **formatoptions)

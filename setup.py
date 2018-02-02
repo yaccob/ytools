@@ -1,28 +1,25 @@
-from setuptools import setup, find_packages
-from codecs import open
-from os import path
+import setuptools
+import io
 
 from ytools import __version__
 
-here = path.abspath(path.dirname(__file__))
-with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
-  long_description = f.read()
-with open(path.join(here, 'LICENSE.txt'), encoding='utf-8') as f:
-  license = f.read()
+distribution = 'ytools'
+version = __version__
 
-setup(
-  name = 'ytools',
-  packages = find_packages(),
+setuptools.setup(
+  name = distribution,
+  packages = [distribution],
+  #data_files = [('schema', ['schema/transformatorschema.yaml'])],
   install_requires = ['PyYaml', 'jsonpath-ng', 'jsonschema'],
-  version = '%s' % __version__,
+  version = '%s' % version,
   description = 'Command-line tool for selectively dumping nodes from `yaml` (or `json`) documents in `yaml` or `json` format.',
-  long_description=long_description,
+  long_description=io.open('README.rst', encoding='utf-8').read(),
   author = 'Jakob Stemberger',
   author_email = 'yaccob@gmx.net',
-  license = license,
-  url = 'https://github.com/yaccob/ytools', # use the URL to the github repo
-  download_url = 'https://github.com/yaccob/ytools/archive/%s.tar.gz' % __version__, # I'll explain this in a second
-  keywords = ['yaml', 'json', 'python', 'jsonpath', 'json-path', 'dump', 'convert', 'validate', 'schema'],
+  license = 'Apache 2.0',
+  url = 'https://github.com/%s/ynot' % (distribution),
+  download_url = 'https://github.com/yaccob/%s/archive/%s.tar.gz' % (distribution, version),
+  keywords = ['yaml', 'json', 'transform', 'xslt', 'jsonpath', 'json-path', 'dump', 'convert', 'validate', 'schema'],
   classifiers = ['Programming Language :: Python :: 2.7'],
-  scripts = ['scripts/ytools'],
+  scripts = ['scripts/%s' % (distribution)],
 )

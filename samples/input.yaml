@@ -6,7 +6,8 @@ documents:
       description: Some section description
       text: Some text for some section
       chapters:
-      - title: Some chapter title
+      - &Chapter1
+        title: Some chapter title
         description: Some chapter description
         text: The text of some chapter
       - title: Some other chapter title
@@ -14,9 +15,18 @@ documents:
         - descriptionparagraph1: Some description for other chapter
         - descriptionparagraph2: Some further description for other chapter
         text: The text of some other chapter
-    - title: Some other section title
+    - &Section2
+      title: Some other section title
       description: Some other section description
       text: Some text for some other section
       chapters:
         - title: About encoding
-          description: "Some German: äöü,ÄÖY,ß"
+          description: &Umlauts "Some German: äöü,ÄÖY,ß"
+  - title: Some other document title
+    description: *Umlauts
+    sections:
+      <<: *Section2
+      title: A differnt title for Section 2 in Document 2
+      chapters:
+        <<: *Chapter1
+        title: A different title for Chapter 1 in Section 2 of Document 2
