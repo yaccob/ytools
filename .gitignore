@@ -101,3 +101,8 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+
+## just for myself
+stackoverflow.txt
+README.html

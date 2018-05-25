@@ -21,7 +21,7 @@ build: $(wildcard $(PACKAGE)/*.py) README.rst setup.py requirements.txt MANIFEST
 	python setup.py bdist_wheel
 
 commit:
-	-git commit -a -m "Committing for Version $(VERSION)"
+	-git commit -m "Committing for Version $(VERSION)"
 
 tag: commit
 	-git tag -a "v$(VERSION)" -m "Version $(VERSION)"

@@ -1,6 +1,9 @@
 # ytools
 
-Command-line tool for selectively dumping nodes from `yaml` (or `json`) documents in `yaml` or `json` format.
+Command-line tool and `python` module for ...
+
+* validating `json` and `yaml` files against a `json-schema` in `json` or `yaml` format
+* selectively dumping nodes from `yaml` (or `json`) documents in `yaml` or `json` format.
 
 ###### Features
 
@@ -66,13 +69,13 @@ Options:
                         utf-8)
 ```
 
-## Samples
+## Command Line Samples
 
 The samples are based on the following data.
 
 ### Sample Data
 
-#### Input data
+#### Input Data
 `input.yaml`:
 
 ```yaml
@@ -245,3 +248,71 @@ Some German: äöü,ÄÖÜ,ß
 ```
 
 So **if you ever want to process the output automatically please stick to `yaml`**.
+
+## Python Samples
+
+### Sample Data
+
+#### Input Data
+
+`test/sampledata.yaml`
+
+```yaml
+name: 'my_name'
+date: '2017-10-01T10:55:00Z'
+metrics:
+  percentage:
+    value: 87
+    trend: stable
+```
+
+#### Schema for Validating
+
+`test/sampleschema.yaml`
+
+```yaml
+type: object
+properties:
+  name: { type: string }
+  date: { type: string, format: date-time }
+  metrics:
+    type: object
+    properties:
+      percentage:
+        type: object
+        properties:
+          value:
+            type: number
+            minimum: 0
+            maximum: 100
+          trend: { type: string, enum: [down, stable, up] }
+        additionalProperties: false
+        required: [value, trend]
+    additionalProperties: false
+    required: [percentage]
+additionalProperties: false
+required: [name, date, metrics]
+```
+
+### Validation
+
+```python
+    ytools.validate("test/sampleschema.yaml", ["test/sampledata.yaml"])
+```
+... will not output anything because of successful validation. Play around if you want to see failing validation - it's quite easy to make it fail ;-)
+
+### Dumping
+
+```python
+    ytools.dump("test/sampledata.yaml", "$.metrics", yaml_options="default_flow_style: false")
+```
+
+... will output ...
+
+```
+---
+percentage:
+  value: 87
+  trend: stable
+...
+```
