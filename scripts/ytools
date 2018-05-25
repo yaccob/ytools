@@ -18,12 +18,12 @@ def main(argv):
     optparser.add_option('-j', '--json-options', dest='json_options', default=optiondefaults['json'], help="kwargs for json.dumps as yaml.mapping (for experts). [default: '%default']")
     optparser.add_option('-v', '--validate', metavar='SCHEMA', dest='schema', help="Validate documents against json-schema")
     optparser.add_option('--encoding', dest='encoding', default='utf-8', help="Set encoding of input documents (if different from utf-8)")
-    opts, args = optparser.parse_args(argv[1:])
+    opts, datafiles = optparser.parse_args(argv[1:])
     try:
         if opts.schema:
-            validate(opts.schema, args, opts.encoding)
+            validate(opts.schema, datafiles, encoding=opts.encoding)
         del(opts.__dict__["schema"])
-        dump(args, **opts.__dict__)
+        dump(datafiles, **opts.__dict__)
     except jsonschema.exceptions.ValidationError, e:
         sys.stderr.write("%s: %s\n" % (e.filename, e.message))
         sys.stderr.write("  document-path: %s\n" % (list(e.absolute_path)))
