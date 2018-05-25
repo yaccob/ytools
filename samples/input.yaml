@@ -21,7 +21,7 @@ documents:
       text: Some text for some other section
       chapters:
         - title: About encoding
-          description: &Umlauts "Some German: äöü,ÄÖY,ß"
+          description: &Umlauts "Some German: äöü,ÄÖÜ,ß"
   - title: Some other document title
     description: *Umlauts
     sections:

@@ -96,7 +96,7 @@ documents:
       text: Some text for some other section
       chapters:
         - title: About encoding
-          description: "Some German: äöü,ÄÖY,ß"
+          description: "Some German: äöü,ÄÖÜ,ß"
 ```
 
 #### Schema for validating `input.yaml`
@@ -178,7 +178,7 @@ documents:
     description: Some other section description
     text: Some text for some other section
     chapters:
-    - {title: About encoding, description: 'Some German: äöü,ÄÖY,ß'}
+    - {title: About encoding, description: 'Some German: äöü,ÄÖÜ,ß'}
 ...
 
 ```
@@ -197,7 +197,7 @@ With the `yaml` output format by default, each match is output as a separate `ya
 - {descriptionparagraph2: Some description for other chapter}
 ...
 
---- 'Some German: äöü,ÄÖY,ß'
+--- 'Some German: äöü,ÄÖÜ,ß'
 ...
 
 ```
@@ -212,7 +212,7 @@ Some chapter description
 - {descriptionparagraph1: Some description for other chapter}
 - {descriptionparagraph2: Some description for other chapter}
 
-'Some German: äöü,ÄÖY,ß'
+'Some German: äöü,ÄÖÜ,ß'
 
 ```
 #### Other output formats
@@ -241,7 +241,7 @@ Neither is the following valid python:
 🎼  ytools -p '$..chapters[*].description' input.yaml -f python
 Some chapter description
 [{'descriptionparagraph1': 'Some description for other chapter'}, {'descriptionparagraph2': 'Some description for other chapter'}]
-Some German: äöü,ÄÖY,ß
+Some German: äöü,ÄÖÜ,ß
 ```
 
 So **if you ever want to process the output automatically please stick to `yaml`**.
