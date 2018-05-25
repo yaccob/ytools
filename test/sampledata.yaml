@@ -1,0 +1,6 @@
+name: 'my_name'
+date: '2017-10-01T10:55:00Z'
+metrics:
+  percentage:
+    value: 87
+    trend: stable

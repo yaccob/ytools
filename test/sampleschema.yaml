@@ -1,0 +1,21 @@
+type: object
+properties:
+  name: { type: string }
+  date: { type: string, format: date-time }
+  metrics:
+    type: object
+    properties:
+      percentage:
+        type: object
+        properties:
+          value:
+            type: number
+            minimum: 0
+            maximum: 100
+          trend: { type: string, enum: [down, stable, up] }
+        additionalProperties: false
+        required: [value, trend]
+    additionalProperties: false
+    required: [percentage]
+additionalProperties: false
+required: [name, date, metrics]

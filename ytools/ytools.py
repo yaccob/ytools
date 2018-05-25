@@ -18,7 +18,7 @@ def validate(schemafile, datafiles, encoding='utf-8'):
         with open(filename) as infile:
             for document in yaml.load_all(infile):
                 try:
-                    jsonschema.validate(document, schema)
+                    jsonschema.validate(document, schema, format_checker=jsonschema.FormatChecker())
                 except jsonschema.exceptions.ValidationError, e:
                     e.filename = filename
                     raise e
