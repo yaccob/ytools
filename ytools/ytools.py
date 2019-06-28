@@ -37,7 +37,8 @@ def dump(datafiles, path='$', format='yaml', yaml_options=optiondefaults['yaml']
         "python": {"dumper": lambda x, **kwargs: x, "kwargs": '{}', "yaml_constructor": dict_constructor}
     }
     yaml.add_constructor(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, encoders[format]["yaml_constructor"])
-    yaml.add_constructor(u'tag:yaml.org,2002:timestamp', yaml.constructor.SafeConstructor.construct_yaml_str)
+    if format == "json":
+        yaml.add_constructor(u'tag:yaml.org,2002:timestamp', yaml.constructor.SafeConstructor.construct_yaml_str)
     yaml.add_representer(collections.OrderedDict, lambda dumper, data: dumper.represent_dict(data.iteritems()))
     documents = yaml.load_all("".join(fileinput.input(datafiles, openhook=fileinput.hook_encoded(encoding))), Loader=yaml.FullLoader)
     formatoptions = dict(yaml.load(optiondefaults[format], Loader=yaml.FullLoader), **yaml.load(encoders[format]["kwargs"], Loader=yaml.FullLoader))
