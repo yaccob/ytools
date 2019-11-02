@@ -1,4 +1,4 @@
 jsonpath-ng==1.4.3
 jsonschema==2.6.0
 strict-rfc3339==0.7
-PyYAML==3.12
+PyYAML==5.1
